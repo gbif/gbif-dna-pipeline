@@ -29,14 +29,14 @@ import java.util.Optional;
  * <h3>Usage</h3>
  * <pre>{@code
  * // On the driver: broadcast a small serializable config
- * VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "LifeStage");
+ * VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "target_gene");
  * Broadcast<VocabConfig> bCfg = spark.sparkContext().broadcast(cfg, scala.reflect.ClassTag$.MODULE$.apply(VocabConfig.class));
  *
  * // Register the UDF
  * GbifVocabularyLookupUdf.register(spark, "vocabLookup", bCfg);
  *
  * // Use in SQL
- * spark.sql("SELECT vocabLookup(raw_lifestage) AS lifestage FROM ...");
+ * spark.sql("SELECT vocabLookup(v_targetgene) AS targetgene FROM ...");
  * }</pre>
  */
 public final class GbifVocabularyLookupUdf {
@@ -183,7 +183,7 @@ public final class GbifVocabularyLookupUdf {
      *
      * @param url            the vocabulary API base URL (e.g.,
      *                       "https://api.gbif.org/v1/vocabularies")
-     * @param vocabularyName the name of the vocabulary to load (e.g., "LifeStage", "target_gene")
+     * @param vocabularyName the name of the vocabulary to load (e.g., "target_gene", "target_gene")
      */
     public VocabConfig {}
   }

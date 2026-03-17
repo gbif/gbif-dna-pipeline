@@ -89,7 +89,7 @@ import org.gbif.vocabulary.spark.udf.GbifVocabularyLookupUdf.VocabConfig;
 SparkSession spark = SparkSession.builder().appName("vocab-lookup").getOrCreate();
 
 // Create and broadcast the small vocabulary config (serializable)
-VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "LifeStage");
+VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "target_gene");
 Broadcast<VocabConfig> broadcastConfig = spark.sparkContext().broadcast(
     cfg,
     scala.reflect.ClassTag$.MODULE$.apply(VocabConfig.class)
@@ -100,9 +100,9 @@ GbifVocabularyLookupUdf.register(spark, "gbifVocabularyLookup", broadcastConfig)
 GbifVocabularyLookupUdf.registerWithLineage(spark, "gbifVocabularyLookupLineage", broadcastConfig);
 
 // Use in SQL
-spark.sql("SELECT gbifVocabularyLookup(raw_lifestage) AS lifestage FROM occurrences");
+spark.sql("SELECT gbifVocabularyLookup(v_targetgene) AS targetgene FROM occurrences");
 // Or get the full struct with concept + lineage
-spark.sql("SELECT gbifVocabularyLookupLineage(raw_lifestage) AS v FROM occurrences");
+spark.sql("SELECT gbifVocabularyLookupLineage(v_targetgene) AS v FROM occurrences");
 
 // After job finishes, unpersist broadcast to free memory
 broadcastConfig.unpersist(true);

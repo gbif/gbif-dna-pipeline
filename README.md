@@ -54,14 +54,14 @@ import org.gbif.vocabulary.spark.udf.GbifVocabularyLookupUdf;
 import org.gbif.vocabulary.spark.udf.GbifVocabularyLookupUdf.VocabConfig;
 
 // Broadcast config to executors
-VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "LifeStage");
+VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "target_gene");
 Broadcast<VocabConfig> bCfg = spark.sparkContext().broadcast(cfg, scala.reflect.ClassTag$.MODULE$.apply(VocabConfig.class));
 
 // Register the UDF
 GbifVocabularyLookupUdf.register(spark, "vocabLookup", bCfg);
 
 // Use in SQL
-spark.sql("SELECT vocabLookup(raw_lifestage) AS lifestage FROM occurrences");
+spark.sql("SELECT vocabLookup(v_targetgene) AS targetgene FROM occurrences");
 ```
 
 ## Spark Jobs
@@ -89,9 +89,9 @@ spark-submit \
   --source-table prod.occurrence \
   --target-table prod.test_vocab \
   --vocab-url https://api.gbif.org/v1/vocabularies \
-  --vocab-name LifeStage \
-  --source-column v_lifestage \
-  --result-column lifestage
+  --vocab-name target_gene \
+  --source-column v_targetgene \
+  --result-column targetgene
 ```
 
 ## Sequence Processing Pipeline

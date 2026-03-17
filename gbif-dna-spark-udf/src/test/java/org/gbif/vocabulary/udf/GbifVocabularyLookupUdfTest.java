@@ -11,7 +11,7 @@ public class GbifVocabularyLookupUdfTest {
 
   @Test
   public void testVocabConfigIsSerializable() throws Exception {
-    VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "LifeStage");
+    VocabConfig cfg = new VocabConfig("https://api.gbif.org/v1/vocabularies", "target_gene");
 
     // Serialize
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -27,7 +27,7 @@ public class GbifVocabularyLookupUdfTest {
     }
 
     assertEquals("https://api.gbif.org/v1/vocabularies", restored.url());
-    assertEquals("LifeStage", restored.vocabularyName());
+    assertEquals("target_gene", restored.vocabularyName());
   }
 
   @Test
