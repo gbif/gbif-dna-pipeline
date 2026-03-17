@@ -45,8 +45,11 @@ public class LookupTargetGeneJob implements Callable<Integer> {
   @Option(names = {"-c", "--source-column"}, description = "Source column name",  required = true)
   private String sourceColumn;
 
-  @Option(names = {"-r", "--result-column"}, description = "Result column name",  required = true)
+  @Option(names = {"-r", "--result-column"}, description = "Result column name (concept name only). At least one of --result-column or --result-concept-column must be specified.")
   private String resultColumn;
+
+  @Option(names = {"--result-concept-column"}, description = "Result column name for the struct with concept and lineage. At least one of --result-column or --result-concept-column must be specified.")
+  private String resultConceptColumn;
 
   public static void main(String[] args) {
     int exitCode = new CommandLine(new LookupTargetGeneJob()).execute(args);
@@ -55,12 +58,19 @@ public class LookupTargetGeneJob implements Callable<Integer> {
 
   @Override
   public Integer call() {
+    // Validate that at least one result column is specified
+    if (resultColumn == null && resultConceptColumn == null) {
+      LOG.error("At least one of --result-column or --result-concept-column must be specified");
+      return ExitCode.ILLEGAL_STATE.code();
+    }
+
     LOG.info("Source table: {}", sourceTable);
     LOG.info("Target table: {}", targetTable);
     LOG.info("Vocabulary URL: {}", vocabUrl);
     LOG.info("Vocabulary name: {}", vocabularyName);
     LOG.info("Source column: {}", sourceColumn);
     LOG.info("Result column: {}", resultColumn);
+    LOG.info("Result concept column: {}", resultConceptColumn);
 
     SparkSession spark = SparkSession.builder()
         .appName("LookupTargetGeneJob")
@@ -83,6 +93,7 @@ public class LookupTargetGeneJob implements Callable<Integer> {
 
       // Register the UDF with the broadcast variable
       GbifVocabularyLookupUdf.register(spark, "gbifVocabularyLookup", broadcastVocabConfig);
+      GbifVocabularyLookupUdf.registerWithLineage(spark, "gbifVocabularyLookupLineage", broadcastVocabConfig);
 
       // Verify source table exists to avoid an uncaught NoSuchTableException later.
       // Try spark.catalog().tableExists(fullName) first, then fall back to splitting dotted names
@@ -94,10 +105,19 @@ public class LookupTargetGeneJob implements Callable<Integer> {
       }
 
       // Use the provided sourceColumn and resultColumn when composing the SQL
-      String applySql = String.format(
-          "SELECT datasetkey, gbifid, %s AS raw_%s, gbifVocabularyLookup(%s) AS %s FROM %s",
-          sourceColumn, sourceColumn, sourceColumn, resultColumn, sourceTable
-      );
+      StringBuilder sqlBuilder = new StringBuilder();
+      sqlBuilder.append("SELECT datasetkey, gbifid, ")
+                .append(sourceColumn).append(" AS raw_").append(sourceColumn);
+
+      if (resultColumn != null) {
+        sqlBuilder.append(", gbifVocabularyLookup(").append(sourceColumn).append(") AS ").append(resultColumn);
+      }
+      if (resultConceptColumn != null) {
+        sqlBuilder.append(", gbifVocabularyLookupLineage(").append(sourceColumn).append(") AS ").append(resultConceptColumn);
+      }
+
+      sqlBuilder.append(" FROM ").append(sourceTable);
+      String applySql = sqlBuilder.toString();
       LOG.info("Running select: {}", applySql);
       Dataset<Row> df = spark.sql(applySql);
 

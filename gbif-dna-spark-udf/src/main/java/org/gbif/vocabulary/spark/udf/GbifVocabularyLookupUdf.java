@@ -1,9 +1,13 @@
 package org.gbif.vocabulary.spark.udf;
 
 import org.apache.spark.broadcast.Broadcast;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.gbif.vocabulary.lookup.InMemoryVocabularyLookup;
 import org.gbif.vocabulary.lookup.LookupConcept;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,6 +80,64 @@ public final class GbifVocabularyLookupUdf {
       }
     };
   }
+
+  // ------------------------------------------------------------------------------------------
+  // UDF with lineage: returns STRUCT<concept: STRING, lineage: ARRAY<STRING>>
+  // ------------------------------------------------------------------------------------------
+
+  /**
+   * Return type for the UDF that includes lineage:
+   * STRUCT&lt;concept: STRING, lineage: ARRAY&lt;STRING&gt;&gt;
+   */
+  public static final StructType RETURN_TYPE_WITH_LINEAGE = DataTypes.createStructType(new StructField[]{
+      DataTypes.createStructField("concept", DataTypes.StringType, true),
+      DataTypes.createStructField("lineage", DataTypes.createArrayType(DataTypes.StringType), true)
+  });
+
+  /**
+   * Register a vocabulary lookup UDF that returns both concept and lineage.
+   *
+   * @param spark          the Spark session
+   * @param udfName        the name to register the UDF under
+   * @param broadcastConfig broadcast variable containing the vocabulary API URL and vocabulary name
+   */
+  public static void registerWithLineage(SparkSession spark, String udfName, Broadcast<VocabConfig> broadcastConfig) {
+    spark.udf().register(udfName, fromBroadcastWithLineage(broadcastConfig), RETURN_TYPE_WITH_LINEAGE);
+  }
+
+  /**
+   * Create a UDF that uses a broadcasted {@link VocabConfig} to lazily build an
+   * {@link InMemoryVocabularyLookup} on each executor.
+   *
+   * <p>Returns a struct with the concept name and its lineage (list of parent concept names).
+   *
+   * @param broadcastConfig broadcast variable containing the vocabulary API URL and vocabulary name
+   * @return a Spark UDF1 that maps raw terms to a struct with concept name and lineage
+   */
+  public static UDF1<String, Row> fromBroadcastWithLineage(Broadcast<VocabConfig> broadcastConfig) {
+    return new UDF1<>() {
+      @Serial
+      private static final long serialVersionUID = 1L;
+
+      @Override
+      public Row call(String term) {
+        if (term == null || broadcastConfig == null) return null;
+        InMemoryVocabularyLookup lookup = getOrCreateExecutorLookup(broadcastConfig.value());
+        if (lookup == null) return null;
+        Optional<LookupConcept> lookupConcept = lookup.lookup(term);
+        if (lookupConcept.isEmpty()) return null;
+
+        LookupConcept lc = lookupConcept.get();
+        String conceptName = lc.getConcept().getName();
+        List<String> lineage = lc.getParents() != null
+            ? lc.getParents().stream().map(LookupConcept.Parent::getName).toList()
+            : List.of();
+
+        return RowFactory.create(conceptName, lineage.toArray(new String[0]));
+      }
+    };
+  }
+
 
   // ------------------------------------------------------------------------------------------
   // Executor-local lookup instance. Built on executor JVMs only.
