@@ -59,7 +59,7 @@ FROM (
     gbifid,
     datasetkey,
     processSequence(dna_sequence, null) as result
-  FROM prod.occurrence_sequences
+  FROM prod.occurrence_ext_gbif_dnaderiveddata
   WHERE dna_sequence IS NOT NULL
 ) t;
 ```

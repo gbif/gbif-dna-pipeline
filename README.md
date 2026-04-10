@@ -74,8 +74,8 @@ Processes DNA sequences from an Iceberg source table.
 spark-submit \
   --class org.gbif.dna.spark.jobs.ProcessSequencesJob \
   gbif-dna-spark-1.0-SNAPSHOT.jar \
-  --source-table default.occurrence_sequences \
-  --target-table default.processed_sequences
+  --source-table default.occurrence_ext_gbif_dnaderiveddata \
+  --target-table default.occurrence_nucleotide_sequence
 ```
 
 ### LookupTargetGeneJob

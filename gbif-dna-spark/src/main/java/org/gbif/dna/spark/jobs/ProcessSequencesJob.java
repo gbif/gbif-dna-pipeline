@@ -19,8 +19,8 @@ import java.util.concurrent.Callable;
  *
  * Usage:
  *   spark-submit --class org.gbif.dna.spark.jobs.ProcessSequencesJob app.jar \
- *     --source-table catalog.db.occurrence_sequences \
- *     --target-table catalog.db.processed_sequences
+ *     --source-table catalog.db.occurrence_ext_gbif_dnaderiveddata \
+ *     --target-table catalog.db.occurrence_nucleotide_sequence
  */
 @Command(
     name = "ProcessSequencesJob",
