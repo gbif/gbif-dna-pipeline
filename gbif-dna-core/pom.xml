@@ -20,13 +20,6 @@
   <name>GBIF DNA Pipelines :: Core</name>
 
   <dependencies>
-
-    <!-- GBIF dependencies -->
-    <dependency>
-      <groupId>org.gbif.vocabulary</groupId>
-      <artifactId>vocabulary-lookup</artifactId>
-    </dependency>
-
     <!-- JUnit 5 for unit testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
