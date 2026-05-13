@@ -223,10 +223,6 @@
         <version>${maven-release-plugin.version}</version>
         <configuration>
           <goals>deploy</goals>
-          <preparationGoals>install</preparationGoals>
-          <resume>false</resume>
-          <useReleaseProfile>true</useReleaseProfile>
-          <releaseProfiles>gbif-release</releaseProfiles>
           <tagNameFormat>${release.tagNameBase}-@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
