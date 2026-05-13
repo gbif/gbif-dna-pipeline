@@ -77,7 +77,10 @@ pipeline {
             globalMavenSettingsConfig: 'org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig1387378707709',
             mavenSettingsConfig: 'org.jenkinsci.plugins.configfiles.maven.MavenSettingsConfig1396361652540',
             traceability: true) {
-              git 'https://github.com/gbif/gbif-dna-pipeline.git'
+              git(
+                  url: 'https://github.com/gbif/gbif-dna-pipeline.git',
+                  branch: 'main'
+              )
               sh '''
                 mvn -B -Dresume=false release:prepare release:perform $RELEASE_ARGS
                 '''
