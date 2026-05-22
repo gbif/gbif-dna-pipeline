@@ -89,6 +89,9 @@
     <scala.tools.version>2.12</scala.tools.version>
     <scala.library.version>2.12.18</scala.library.version>
 
+    <!-- Zstd JNI for compression -->
+    <zstd-jni.version>1.5.5-11</zstd-jni.version>
+
     <!-- JUnit 5 for unit testing -->
     <junit-jupiter.version>5.12.2</junit-jupiter.version>
 
@@ -196,6 +199,13 @@
         <artifactId>scala-library</artifactId>
         <version>${scala.library.version}</version>
         <scope>provided</scope>
+      </dependency>
+
+      <!-- Zstd JNI for compression -->
+      <dependency>
+        <groupId>com.github.luben</groupId>
+        <artifactId>zstd-jni</artifactId>
+        <version>${zstd-jni.version}</version>
       </dependency>
 
       <!-- Junit 5 for unit testing -->

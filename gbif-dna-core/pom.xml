@@ -18,6 +18,12 @@
   <name>GBIF DNA Pipelines :: Core</name>
 
   <dependencies>
+    <!-- Zstd JNI for compression -->
+    <dependency>
+      <groupId>com.github.luben</groupId>
+      <artifactId>zstd-jni</artifactId>
+    </dependency>
+
     <!-- JUnit 5 for unit testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
