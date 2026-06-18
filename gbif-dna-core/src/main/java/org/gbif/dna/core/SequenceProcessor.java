@@ -132,7 +132,7 @@ public class SequenceProcessor {
     // example: with nrun_cap_from=6 and nrun_cap_to=5:
     // "ACGTACGTNNNNNNNNNNNNNNACGTACGTNNNNNNNNNACGTACGT" -> "ACGTACGTNNNNNACGTACGTNNNNNACGTACGT"
     String capPattern = "N{" + config.nrunCapFrom() + ",}";
-    int nNrunsCapped = countRegex(s6, capPattern);
+    int nRunsCapped = countRegex(s6, capPattern);
     String capToStr = "N".repeat(config.nrunCapTo());
     String s7 = s6.replaceAll(capPattern, capToStr);
 
@@ -166,7 +166,7 @@ public class SequenceProcessor {
       nonIupacFraction,
       nonACGTNFraction,
       nFraction,
-      nNrunsCapped,
+      nRunsCapped,
       gcContent,
       naturalLanguageDetected,
       endsTrimmed,

@@ -136,7 +136,7 @@ public class ProcessSequenceUdfTest {
     // N-run of 10 should be capped to 5
     assertTrue(cleanedSequence.contains("NNNNN"));
     assertFalse(cleanedSequence.contains("NNNNNN")); // Should not have 6 consecutive Ns
-    assertEquals(1, result.getInt(7)); // nNrunsCapped
+    assertEquals(1, result.getInt(7)); // nRunsCapped
     assertFalse(result.getBoolean(13)); // invalid
   }
 
@@ -155,7 +155,7 @@ public class ProcessSequenceUdfTest {
     // N-run of 4 should be capped to 2
     assertTrue(cleanedSequence.contains("NN"));
     assertFalse(cleanedSequence.contains("NNN")); // Should not have 3 consecutive Ns
-    assertEquals(1, result.getInt(7)); // nNrunsCapped
+    assertEquals(1, result.getInt(7)); // nRunsCapped
   }
 
   @Test

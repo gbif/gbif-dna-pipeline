@@ -106,20 +106,20 @@ spark-submit \
 
 ## Output Schema
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `sequence` | String | Cleaned sequence (null if invalid) |
-| `sequenceLength` | Integer | Length of cleaned sequence |
-| `gcContent` | Double | GC content ratio |
-| `nonIupacFraction` | Double | Fraction of non-IUPAC characters |
-| `nonACGTNFraction` | Double | Fraction of non-ACGTN characters |
-| `nFraction` | Double | Fraction of N characters |
-| `nNrunsCapped` | Integer | Number of N-runs capped |
+| Column                    | Type | Description |
+|---------------------------|------|-------------|
+| `sequence`                | String | Cleaned sequence (null if invalid) |
+| `sequenceLength`          | Integer | Length of cleaned sequence |
+| `gcContent`               | Double | GC content ratio |
+| `nonIupacFraction`        | Double | Fraction of non-IUPAC characters |
+| `nonACGTNFraction`        | Double | Fraction of non-ACGTN characters |
+| `nFraction`               | Double | Fraction of N characters |
+| `nRunsCapped`             | Integer | Number of N-runs capped |
 | `naturalLanguageDetected` | Boolean | Natural language detected |
-| `endsTrimmed` | Boolean | Ends were trimmed |
+| `endsTrimmed`             | Boolean | Ends were trimmed |
 | `gapsOrWhitespaceRemoved` | Boolean | Gaps/whitespace removed |
-| `nucleotideSequenceID` | String | MD5 hash of cleaned sequence |
-| `invalid` | Boolean | Sequence is invalid |
+| `nucleotideSequenceID`    | String | MD5 hash of cleaned sequence |
+| `invalid`                 | Boolean | Sequence is invalid |
 
 ## Requirements
 

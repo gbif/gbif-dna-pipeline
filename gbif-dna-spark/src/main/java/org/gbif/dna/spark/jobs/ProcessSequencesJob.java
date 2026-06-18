@@ -75,7 +75,7 @@ public class ProcessSequencesJob implements Callable<Integer> {
             result.nonIupacFraction as nonIupacFraction,
             result.nonACGTNFraction as nonACGTNFraction,
             result.nFraction as nFraction,
-            result.nNrunsCapped as nNrunsCapped,
+            result.nRunsCapped as nRunsCapped,
             result.gcContent as gcContent,
             result.naturalLanguageDetected as naturalLanguageDetected,
             result.endsTrimmed as endsTrimmed,

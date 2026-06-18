@@ -36,7 +36,7 @@ spark.sql("SELECT processSequence(dna_sequence, map('maxNRunsCap','10','trimEnds
 
 The UDF returns a STRUCT with the following fields (same semantics as before):
 - seqId, rawSequence, sequence, sequenceLength, nonIupacFraction, nonACGTNFraction,
-  nFraction, nNrunsCapped, gcContent, naturalLanguageDetected, endsTrimmed,
+  nFraction, nRunsCapped, gcContent, naturalLanguageDetected, endsTrimmed,
   gapsOrWhitespaceRemoved, nucleotideSequenceID, invalid
 
 (Implementation exposes the STRUCT type as `ProcessSequenceUdfSchema.RETURN_TYPE`.)
