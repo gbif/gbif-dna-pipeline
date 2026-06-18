@@ -56,7 +56,7 @@ public class SequenceProcessor {
     Double nonIupacFraction,
     Double nonACGTNFraction,
     Double nFraction,
-    int nNrunsCapped,
+    int nRunsCapped,
     Double gcContent,
     boolean naturalLanguageDetected,
     boolean endsTrimmed,

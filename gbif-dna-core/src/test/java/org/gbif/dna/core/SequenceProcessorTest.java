@@ -55,7 +55,7 @@ public class SequenceProcessorTest {
     SequenceProcessor.Result r = sp.processOneSequence("ACGTNNNNNNNNNNACGT", "id4");
     assertFalse(r.invalid());
     assertEquals("ACGTNNNNNACGT", r.sequence());
-    assertEquals(1, r.nNrunsCapped());
+    assertEquals(1, r.nRunsCapped());
   }
 
   @Test
